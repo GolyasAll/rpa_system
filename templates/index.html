@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Avançado - Automação</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/favicon.svg') }}">
+    
+    <script>
+        tailwind = {
+            config: {
+                darkMode: 'class'
+            }
+        }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .modulo-card input[type="checkbox"], .modo-card input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            display: none; 
+        }
+        
+        .modulo-label, .modo-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            background-color: #f1f5f9;
+            border: 2px solid transparent;
+            color: #475569;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        html.dark .modulo-label, html.dark .modo-label {
+            background-color: #2b2d31;
+            color: #b5bac1;
+        }
+
+        .modulo-label:hover, .modo-label:hover {
+            background-color: #e2e8f0;
+            color: #1e293b;
+        }
+        html.dark .modulo-label:hover, html.dark .modo-label:hover {
+            background-color: #3f4147;
+            color: #ffffff;
+        }
+
+        .modulo-card input[type="checkbox"]:checked + .modulo-label,
+        .modo-card input[type="radio"]:checked + .modo-label {
+            background-color: #eff6ff;
+            border-color: #3b82f6;
+            color: #1d4ed8;
+        }
+        
+        html.dark .modulo-card input[type="checkbox"]:checked + .modulo-label,
+        html.dark .modo-card input[type="radio"]:checked + .modo-label {
+            background-color: #1e3a8a;
+            border-color: #3b82f6;
+            color: #93c5fd; 
+        }
+
+        #btn-start {
+            width: 100%;
+            padding: 0.875rem 1.25rem;
+            border-radius: 0.625rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            background-color: #2563eb; 
+            color: #ffffff;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            margin-top: 1.25rem;
+        }
+
+        #btn-start:hover:not(:disabled) {
+            background-color: #1d4ed8;
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+            transform: translateY(-1px);
+        }
+
+        #btn-start:disabled {
+            background-color: #e2e8f0;
+            color: #94a3b8;
+            border-color: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        html.dark #btn-start:disabled {
+            background-color: #2b2d31;
+            color: #b5bac1;
+            border-color: #44464b;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased transition-colors duration-300">
+
+    <header class="custom-card border-b px-6 py-4 flex justify-between items-center shadow-sm">
+        <div class="flex items-center space-x-3">
+            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="Logo" class="w-10 h-10 drop-shadow-sm">
+            <div>
+                <h1 class="font-bold text-lg tracking-tight flex items-center gap-2">
+                    Prata - System
+                    <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-200 text-slate-700 dark:bg-[#1e1f22] dark:text-white">v1.0</span>
+                </h1>
+                <p class="text-xs text-slate-500 dark:text-white">Ambiente Centralizado de Extração Estruturada</p>
+            </div>
+        </div>
+        
+        <button onclick="alternarTema()" class="p-2 rounded-full border border-slate-300 dark:border-[#44464b] hover:bg-slate-200 dark:hover:bg-[#1e1f22] transition" title="Mudar Tema">
+            <svg class="w-5 h-5 block dark:hidden text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 100 2h1z"></path></svg>
+            <svg class="w-5 h-5 hidden dark:block text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+        </button>
+    </header>
+
+    <main class="max-w-[1600px] mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        
+        <section class="lg:col-span-4 flex">
+            <div class="custom-card p-6 rounded-xl shadow-sm w-full flex flex-col">
+                <h2 class="font-semibold text-base mb-4 border-b border-slate-200 dark:border-[#44464b] pb-2 text-blue-600 dark:text-blue-400">Autenticação e Diretórios</h2>
+                
+                <form id="form-coleta" class="flex flex-col flex-1">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-medium texto-branco-dark mb-1">E-mail Corporativo</label>
+                            <input type="text" name="email" class="w-full custom-input px-3 py-2 rounded-lg text-sm" placeholder="usuario@simplo.com" required>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-medium texto-branco-dark mb-1">Senha de Acesso</label>
+                            <input type="password" name="senha" class="w-full custom-input px-3 py-2 rounded-lg text-sm" placeholder="••••••••••••" required>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-medium texto-branco-dark mb-1">Identificador do Arquivo Excel (.xlsx)</label>
+                            <input type="text" id="input-arquivo" name="arquivo" class="w-full custom-input px-3 py-2 rounded-lg text-sm" placeholder="Mapeamento_Matriz" required>
+                        </div>
+
+                        <div class="p-3 bg-slate-100 dark:bg-[#2b2d31] rounded-lg flex justify-between text-sm items-center border border-transparent dark:border-[#44464b] transition-colors">
+                            <label class="flex items-center space-x-2 cursor-pointer select-none">
+                                <input type="checkbox" name="headless" class="rounded text-blue-600 border-slate-300 dark:border-[#5c5f66] bg-slate-50 dark:bg-[#1e1f22]">
+                                <span class="text-slate-700 dark:text-slate-200 font-medium">Modo Invisível (Headless)</span>
+                            </label>
+                        </div>
+
+                        <h3 id="titulo-profundidade" class="font-semibold text-xs texto-branco-dark uppercase tracking-wider pt-2">Profundidade da Coleta</h3>
+                        <div id="grupo-profundidade" class="flex flex-col gap-2 transition-opacity">
+                            <div class="modo-card">
+                                <input type="radio" name="profundidade" id="mode-modelos" value="modelos" checked>
+                                <label for="mode-modelos" class="modo-label">
+                                    <span>1. Capturar apenas modelos</span>
+                                </label>
+                            </div>
+                            <div class="modo-card">
+                                <input type="radio" name="profundidade" id="mode-indices" value="indices">
+                                <label for="mode-indices" class="modo-label">
+                                    <span>2. Capturar modelos e índices</span>
+                                </label>
+                            </div>
+                            <div class="modo-card">
+                                <input type="radio" name="profundidade" id="mode-capitulos" value="capitulos">
+                                <label for="mode-capitulos" class="modo-label">
+                                    <span>3. Capturar índices e capítulos</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <h3 class="font-semibold text-xs texto-branco-dark uppercase tracking-wider pt-2">Módulos de Varredura</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="modulo-card">
+                                <input type="checkbox" name="simplus" id="pkg-simplus" class="pacote">
+                                <label for="pkg-simplus" class="modulo-label">
+                                    <span>Simplus</span>
+                                </label>
+                            </div>
+                            <div class="modulo-card">
+                                <input type="checkbox" name="beta" id="pkg-beta" class="pacote">
+                                <label for="pkg-beta" class="modulo-label">
+                                    <span>Beta (desenvolvimento)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="btn-start" class="!mt-auto">INICIAR COLETA</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="lg:col-span-8 flex flex-col gap-6">
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                
+                <div class="custom-card p-4 rounded-xl flex flex-col justify-between shadow-sm">
+                    <span class="text-xs font-semibold texto-branco-dark uppercase tracking-wide">Estado Interno</span>
+                    <div class="flex items-center space-x-2 mt-2">
+                        <div id="status-indicador" class="w-3 h-3 rounded-full bg-rose-500"></div>
+                        <span id="status-texto" class="font-bold text-sm texto-principal">Sistema Ocioso</span>
+                    </div>
+                </div>
+
+                <div class="custom-card p-4 rounded-xl flex flex-col justify-between shadow-sm">
+                    <span class="text-xs font-semibold texto-branco-dark uppercase tracking-wide">Tempo Decorrido</span>
+                    <span id="telemetria-tempo" class="font-mono font-bold text-xl text-blue-600 dark:text-blue-400 mt-2">00:00:00</span>
+                </div>
+
+                <div class="custom-card p-4 rounded-xl flex flex-col justify-between shadow-sm md:col-span-2">
+                    <span class="text-xs font-semibold texto-branco-dark uppercase tracking-wide">Posicionamento</span>
+                    <div class="mt-2 text-xs space-y-2">
+                        <div>
+                            <span class="texto-branco-dark text-sm">Manual:</span> 
+                            <span id="telemetria-manual" class="font-medium texto-principal text-sm">-</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="texto-branco-dark text-sm">Progresso (Montadora):</span> 
+                            <span id="telemetria-montadora" class="font-bold text-emerald-600 dark:text-emerald-400 text-sm">-</span>
+                            
+                            <span id="container-progresso" class="opacity-0 transition-opacity bg-slate-200 dark:bg-[#1e1f22] px-3 py-1 rounded-md font-mono flex items-center shadow-inner border border-slate-300 dark:border-[#44464b]">
+                                <span id="telemetria-progresso-atual" class="font-black text-blue-600 dark:text-blue-400 text-base">0</span>
+                                <span class="text-slate-400 mx-2 font-bold text-sm">/</span>
+                                <span id="telemetria-progresso-total" class="font-bold text-slate-500 dark:text-slate-400 text-base">0</span>
+                            </span>
+                            
+                        </div>
+                        <div>
+                            <span class="texto-branco-dark text-sm">Total na Sessão:</span> 
+                            <span id="telemetria-modelos" class="font-black texto-principal text-sm">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="custom-card p-4 rounded-xl shadow-sm flex flex-col h-[650px]">
+                <div class="flex justify-between items-center border-b border-slate-200 dark:border-[#44464b] pb-2 mb-3">
+                    <span class="text-xs font-bold uppercase tracking-wider texto-branco-dark flex items-center space-x-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-ping"></span>
+                        <span>Terminal Analítico</span>
+                    </span>
+                </div>
+                
+                <div id="terminal-container" class="terminal-box bg-[#111214] text-green-400 flex-1 rounded-lg p-4 overflow-y-auto font-mono text-sm leading-relaxed scroll-smooth mb-2">
+                    <div id="terminal-output">
+                        <div class="text-slate-500 text-xs italic">Aguardando disparo do código para iniciar escuta de logs...</div>
+                    </div>
+                </div>
+
+                <div id="container-interativo" class="hidden flex space-x-2 animate-pulse transition-all">
+                    <input type="number" id="input-interativo" class="flex-1 bg-[#111214] border border-emerald-500/50 text-[#4ade80] px-3 py-2 rounded-lg font-mono text-sm focus:outline-none focus:border-emerald-500 placeholder-slate-600" placeholder="Digite o número da opção desejada e aperte ENTER...">
+                    <button id="btn-enviar-input" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-lg text-sm font-bold transition">ENVIAR</button>
+                </div>
+            </div>
+            
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

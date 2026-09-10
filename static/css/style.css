@@ -1,0 +1,132 @@
+/* ==========================================================================
+   VARIÁVEIS DE COR E SISTEMA DE TEMAS (CSS VARIABLES)
+   ========================================================================== */
+
+:root {
+    --bg-principal: #f8fafc;       
+    --bg-card: #ffffff;            
+    --texto-principal: #0f172a;    
+    --texto-secundario: #475569;   
+    --borda: #e2e8f0;              
+    --bg-input: #ffffff;           
+    
+    --cor-titulo-h1: #0f172a;      
+    --cor-texto-terminal: #4ade80; 
+}
+
+/* --------------------------------------------------------------------------
+   NOVO MODO ESCURO: Estética "Grafite/Dim" (Cinza suave para descanso visual)
+   -------------------------------------------------------------------------- */
+html.dark {
+    --bg-principal: #2b2d31;       
+    --bg-card: #313338;            
+    --texto-principal: #f2f3f5;    
+    --texto-secundario: #b5bac1;   
+    --borda: #44464b;              
+    --bg-input: #1e1f22;           
+    
+    --cor-titulo-h1: #ffffff;      
+    --cor-texto-terminal: #4ade80; 
+}
+
+* {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+    background-color: var(--bg-principal);
+    color: var(--texto-principal);
+    min-height: 100vh;
+}
+
+header h1 {
+    color: var(--cor-titulo-h1) !important;
+}
+
+/* ==========================================================================
+   COMPONENTES CUSTOMIZADOS: Elementos da Interface
+   ========================================================================== */
+
+.custom-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--borda);
+    /* SOLUÇÃO 2: Garante que todos os filhos herdem a cor principal correta */
+    color: var(--texto-principal); 
+}
+
+.custom-input {
+    background-color: var(--bg-input);
+    border: 1px solid var(--borda);
+    color: var(--texto-principal);
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.custom-input:focus {
+    border-color: #3b82f6; 
+    outline: none;
+}
+
+.input-erro {
+    border-color: #ef4444 !important; 
+    background-color: rgba(239, 68, 68, 0.05) !important; 
+    color: #ef4444 !important;
+}
+
+.terminal-box {
+    background-color: #111214;    
+    font-family: 'Fira Code', 'Courier New', Courier, monospace; 
+    border: 1px solid var(--borda);
+}
+
+.terminal-linha {
+    color: var(--cor-texto-terminal) !important;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--borda);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--texto-secundario);
+}
+
+@keyframes pulsar {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.95); }
+}
+
+.pulse-active {
+    animation: pulsar 2s infinite ease-in-out;
+}
+
+/* ========================================================================== */
+/* TEXTOS AUTOMÁTICOS DO DARK MODE (SOLUÇÃO MAIS ROBUSTA)                      */
+/* ========================================================================== */
+
+.texto-principal {
+    color: var(--texto-principal);
+}
+
+.texto-secundario {
+    color: var(--texto-secundario);
+}
+
+.texto-branco-dark {
+    /* Cor cinza chumbo para o modo claro */
+    color: #475569; 
+}
+
+html.dark .texto-branco-dark {
+    /* Branco absoluto e forçado para o modo escuro */
+    color: #ffffff !important; 
+}
