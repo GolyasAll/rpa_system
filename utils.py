@@ -100,7 +100,9 @@ def extrair_numero_capitulo(navegador, elemento_imagem):
             
             # MÁGICA: Procura OBRIGATORIAMENTE a palavra "Capítulo" seguida do número.
             # Isso ignora completamente qualquer código de barras ou serial isolado na imagem!
-            match = re.search(r'(?i)cap(?:[íi]tulo)?\s*([0-9oOiIlLsSbB]+)', texto)
+            # Aceita pequenas deformações de "Capítulo" produzidas pelo OCR,
+            # mas exige o prefixo "Cap" e o número imediatamente depois.
+            match = re.search(r'(?i)cap(?:[a-zÀ-ÿ]{0,6})?\s*([0-9oOiIlLsSbB]+)', texto)
             if match:
                 bruto = match.group(1).upper()
                 limpo = bruto.replace('O', '0').replace('I', '1').replace('L', '1').replace('S', '5').replace('B', '8')
@@ -145,6 +147,7 @@ def extrair_numero_capitulo(navegador, elemento_imagem):
             )
         ]
         img_cabecalho_azul = None
+        img_cabecalho_azul_texto_escuro = None
         if pontos_azuis:
             xs, ys = zip(*pontos_azuis)
             margem = 3
@@ -165,8 +168,29 @@ def extrair_numero_capitulo(navegador, elemento_imagem):
                 Image.Resampling.LANCZOS
             )
 
+            # Tipo 22: fundo azul-vivo e texto escuro. O filtro anterior é
+            # adequado para letras claras; este usa o brilho máximo do pixel
+            # para preservar somente caracteres escuros em fundo branco.
+            img_cabecalho_azul_texto_escuro = Image.new('L', faixa_azul.size, 255)
+            img_cabecalho_azul_texto_escuro.putdata([
+                0 if max(pixel) < 120 else 255
+                for pixel in faixa_azul.getdata()
+            ])
+            img_cabecalho_azul_texto_escuro = img_cabecalho_azul_texto_escuro.resize(
+                (
+                    img_cabecalho_azul_texto_escuro.width * 4,
+                    img_cabecalho_azul_texto_escuro.height * 4,
+                ),
+                Image.Resampling.LANCZOS
+            )
+
         variacoes = [img for img in [
-            img_cabecalho_azul, img_contraste, img_invertida, *imagens_binarias, img_zoom
+            img_cabecalho_azul,
+            img_cabecalho_azul_texto_escuro,
+            img_contraste,
+            img_invertida,
+            *imagens_binarias,
+            img_zoom,
         ] if img is not None]
 
         # Tenta ler com cada lente, uma de cada vez. Achou, ele para e retorna.
